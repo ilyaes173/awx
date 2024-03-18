@@ -1,6 +1,7 @@
 ---
 - name: Install Nginx
   hosts: all
+  remote_user: ilyes
   become: yes  # This allows the tasks to run with sudo privileges
 
   tasks:
