@@ -1,0 +1,22 @@
+---
+- name: Install Nginx
+  hosts: all
+  become: yes  # This allows the tasks to run with sudo privileges
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      tags: [update_cache]
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present  # Ensures Nginx is installed
+      tags: [install_nginx]
+
+    - name: Start Nginx service
+      service:
+        name: nginx
+        state: started
+      tags: [start_nginx]
