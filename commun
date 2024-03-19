@@ -1,0 +1,33 @@
+---
+- name: Execute system updates and reboot
+  hosts: all# Replace "your_host_group" with the appropriate group of hosts
+  become: yes  # This allows the tasks to run with sudo privileges
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      tags: [update_cache]
+
+    - name: Upgrade packages
+      apt:
+        upgrade: yes
+        update_cache: yes  # Update the cache again after upgrading
+      tags: [upgrade_packages]
+
+    - name: Perform distribution upgrade
+      apt:
+        upgrade: dist
+        update_cache: yes  # Update the cache again after performing dist-upgrade
+      tags: [dist_upgrade]
+
+    - name: Reboot the system
+      shell: shutdown -r now
+      async: 0
+      poll: 0
+      ignore_errors: true  # Ignore errors as the reboot will disconnect the SSH connection
+      tags: [reboot]
+
+    - name: Disable swap
+      command: swapoff --all --verbose
+      tags: [disable_swap]
