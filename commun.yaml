@@ -1,8 +1,8 @@
 ---
 - name: Execute system updates and reboot
-  hosts: all# Replace "your_host_group" with the appropriate group of hosts
-  become: yes  # This allows the tasks to run with sudo privileges
-
+  hosts: all 
+  remote_user: ilyes
+  become: yes  
   tasks:
     - name: Update apt cache
       apt:
