@@ -21,12 +21,12 @@
         update_cache: yes  # Update the cache again after performing dist-upgrade
       tags: [dist_upgrade]
 
-    - name: Reboot the system
-      shell: shutdown -r now
-      async: 0
-      poll: 0
-      ignore_errors: true  # Ignore errors as the reboot will disconnect the SSH connection
-      tags: [reboot]
+    # - name: Reboot the system
+    #   shell: shutdown -r now
+    #   async: 0
+    #   poll: 0
+    #   ignore_errors: true  # Ignore errors as the reboot will disconnect the SSH connection
+    #   tags: [reboot]
 
     - name: Disable swap
       command: swapoff --all --verbose
