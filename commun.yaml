@@ -62,6 +62,3 @@
       with_items: "{{ java_versions.stdout_lines }}"
       when: "item != 'java is /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java'"
       ignore_errors: true
-  handlers:
-          - name: Reload sysctl
-            command: sysctl -p
