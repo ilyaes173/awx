@@ -1,0 +1,11 @@
+---
+- name: Create folder named "awx"
+  hosts: all
+  remote_user: ilyes
+
+  tasks:
+    - name: Create the folder "awx"
+      file:
+        path: /home/ilyes/awx  # Specify the path where you want to create the folder
+        state: directory
+        mode: "0755"
