@@ -21,13 +21,6 @@
         update_cache: yes  # Update the cache again after performing dist-upgrade
       tags: [dist_upgrade]
 
-    # - name: Reboot the system
-    #   shell: shutdown -r now
-    #   async: 0
-    #   poll: 0
-    #   ignore_errors: true  # Ignore errors as the reboot will disconnect the SSH connection
-    #   tags: [reboot]
-
     - name: Disable swap
       command: swapoff --all --verbose
       tags: [disable_swap]
@@ -48,7 +41,27 @@
         - { name: net.ipv4.tcp_keepalive_time, value: 60 }
         - { name: net.ipv4.tcp_keepalive_probes, value: 3 }
         - { name: net.ipv4.tcp_keepalive_intvl, value: 10 }
-  handlers:
-    - name: Reload sysctl
-      command: sysctl -p
+      handlers:
+        - name: Reload sysctl
+          command: sysctl -p
+    
+    - name: Install OpenJDK 8
+      apt:
+        name: openjdk-8-jre
+        state: present
 
+    - name: Set OpenJDK 8 as the default Java version
+      command: update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+    - name: Check installed Java versions
+      command: update-alternatives --display java
+      register: java_versions
+      changed_when: false
+
+    - name: Uninstall other Java versions
+      apt:
+        name: "{{ item }}"
+        state: absent
+      with_items: "{{ java_versions.stdout_lines }}"
+      when: "item != 'java is /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java'"
+      ignore_errors: true
