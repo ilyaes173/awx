@@ -41,9 +41,6 @@
         - { name: net.ipv4.tcp_keepalive_time, value: 60 }
         - { name: net.ipv4.tcp_keepalive_probes, value: 3 }
         - { name: net.ipv4.tcp_keepalive_intvl, value: 10 }
-      handlers:
-        - name: Reload sysctl
-          command: sysctl -p
     
     - name: Install OpenJDK 8
       apt:
@@ -65,3 +62,6 @@
       with_items: "{{ java_versions.stdout_lines }}"
       when: "item != 'java is /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java'"
       ignore_errors: true
+  handlers:
+          - name: Reload sysctl
+            command: sysctl -p
