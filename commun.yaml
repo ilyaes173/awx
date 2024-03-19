@@ -31,3 +31,24 @@
     - name: Disable swap
       command: swapoff --all --verbose
       tags: [disable_swap]
+
+    - name: Set vm.max_map_count in /etc/sysctl.conf
+      lineinfile:
+        path: /etc/sysctl.conf
+        line: 'vm.max_map_count=1048575'
+        state: present
+      notify: Reload sysctl
+
+    - name: Set TCP keepalive parameters
+      sysctl:
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        state: present
+      with_items:
+        - { name: net.ipv4.tcp_keepalive_time, value: 60 }
+        - { name: net.ipv4.tcp_keepalive_probes, value: 3 }
+        - { name: net.ipv4.tcp_keepalive_intvl, value: 10 }
+  handlers:
+    - name: Reload sysctl
+      command: sysctl -p
+
